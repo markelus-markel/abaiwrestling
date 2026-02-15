@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Федерация борьбы области Абай</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<script>
+function switchLang(lang) {
+  document.querySelectorAll('[data-ru]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang);
+  });
+}
+</script>
+</head>
+
+<body class="bg-gray-50 text-gray-800 scroll-smooth">
+
+<!-- HEADER -->
+<header class="fixed w-full bg-blue-900 text-white shadow z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
+    <div class="font-bold text-lg">Федерация борьбы области Абай</div>
+    <div class="space-x-2">
+      <button onclick="switchLang('ru')" class="bg-white text-blue-900 px-3 py-1 rounded">RU</button>
+      <button onclick="switchLang('kz')" class="bg-yellow-400 text-blue-900 px-3 py-1 rounded">KZ</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="h-screen flex items-center justify-center text-white text-center relative">
+  <div class="absolute inset-0 bg-blue-900"></div>
+  <div class="relative z-10 px-6 mt-16">
+    <h1 class="text-4xl md:text-6xl font-bold mb-6"
+        data-ru="Федерация борьбы области Абай"
+        data-kz="Абай облысы күрес федерациясы">
+        Федерация борьбы области Абай
+    </h1>
+
+    <p class="text-xl md:text-2xl italic mb-4"
+       data-ru="«Мы объединяемся ради силы, чести и будущего нашего региона»"
+       data-kz="«Біз өңіріміздің күші, абыройы және болашағы үшін бірігеміз»">
+       «Мы объединяемся ради силы, чести и будущего нашего региона»
+    </p>
+
+    <p class="text-lg tracking-widest"
+       data-ru="Греко-римская • Вольная • Женская борьба"
+       data-kz="Грек-рим • Еркін • Әйелдер күресі">
+       Греко-римская • Вольная • Женская борьба
+    </p>
+  </div>
+</section>
+
+<!-- О ФЕДЕРАЦИИ -->
+<section class="py-20 bg-white text-center">
+<div class="max-w-4xl mx-auto px-6">
+<h2 class="text-3xl font-bold text-blue-900 mb-8"
+    data-ru="О Федерации и Миссия"
+    data-kz="Федерация туралы және миссиясы">
+    О Федерации и Миссия
+</h2>
+
+<p class="mb-6"
+   data-ru="Мы создаем условия, где каждый ребенок может раскрыть свой потенциал. Мы служим интересам общества, спортсменов и государства."
+   data-kz="Біз әрбір бала өз әлеуетін аша алатын жағдай жасаймыз. Біз қоғамның, спортшылардың және мемлекеттің мүддесіне қызмет етеміз.">
+   Мы создаем условия, где каждый ребенок может раскрыть свой потенциал...
+</p>
+
+<blockquote class="bg-blue-50 p-6 rounded-xl italic text-blue-900"
+data-ru="«Формирование устойчивой системы развития спортивной борьбы в Абайской области, направленной на воспитание физически крепкой, духовно сильной и социально ответственной молодежи, способной достойно представлять регион и Республику Казахстан»."
+data-kz="«Абай облысында спорттық күресті дамытудың тұрақты жүйесін қалыптастыру, дене шыныққан, рухани мықты және әлеуметтік жауапты жастарды тәрбиелеу»."
+>
+«Формирование устойчивой системы развития спортивной борьбы...»
+</blockquote>
+</div>
+</section>
+
+<!-- ЦЕННОСТИ -->
+<section class="py-20 bg-gray-100">
+<div class="max-w-6xl mx-auto px-6">
+<h2 class="text-3xl font-bold text-center text-blue-900 mb-12"
+data-ru="Наши ценности"
+data-kz="Біздің құндылықтар">
+Наши ценности
+</h2>
+
+<div class="grid md:grid-cols-3 gap-8 text-center">
+
+<div class="bg-white p-6 rounded-xl shadow">
+<i class="fa-solid fa-flag text-3xl text-blue-700 mb-4"></i>
+<h3 class="font-semibold text-xl"
+data-ru="Патриотизм и традиции"
+data-kz="Патриотизм және дәстүр">
+Патриотизм
+</h3>
+<p data-ru="Борьба как часть культурного наследия."
+data-kz="Күрес – мәдени мұраның бір бөлігі.">
+Борьба как часть культурного наследия.
+</p>
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+<i class="fa-solid fa-scale-balanced text-3xl text-blue-700 mb-4"></i>
+<h3 class="font-semibold text-xl"
+data-ru="Честность и справедливость"
+data-kz="Адалдық және әділдік">
+Честность
+</h3>
+<p data-ru="Прозрачность и равные возможности."
+data-kz="Ашықтық және тең мүмкіндік.">
+Прозрачность.
+</p>
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow">
+<i class="fa-solid fa-medal text-3xl text-blue-700 mb-4"></i>
+<h3 class="font-semibold text-xl"
+data-ru="Профессионализм"
+data-kz="Кәсібилік">
+Профессионализм
+</h3>
+<p data-ru="Высокие стандарты подготовки."
+data-kz="Жоғары дайындық стандарттары.">
+Стандарты.
+</p>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- КОНТАКТЫ -->
+<section class="py-20 bg-white text-center">
+<div class="max-w-4xl mx-auto px-6">
+<h2 class="text-3xl font-bold text-blue-900 mb-8"
+data-ru="Контакты"
+data-kz="Байланыс">
+Контакты
+</h2>
+
+<p data-ru="Казахстан, область Абай, г. Семей, ул. Первомайская, дом 32А, кв. 36"
+data-kz="Қазақстан, Абай облысы, Семей қ., Первомайская көшесі 32А, 36-пәтер">
+Адрес
+</p>
+
+<p class="mt-4">БИН: 221140005458</p>
+<p>АО «Bereke Bank»</p>
+
+<p class="mt-6 font-semibold text-blue-900"
+data-ru="Мы открыты к сотрудничеству и совместному созиданию"
+data-kz="Біз ынтымақтастық пен бірлескен дамуға ашықпыз">
+Мы открыты к сотрудничеству
+</p>
+</div>
+</section>
+
+<footer class="bg-blue-900 text-white text-center py-6">
+© 2026 Федерация борьбы области Абай
+</footer>
+
+</body>
+</html>
