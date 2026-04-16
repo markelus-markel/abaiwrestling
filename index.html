@@ -1,163 +1,836 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html class="dark" lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Федерация борьбы области Абай</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<script>
-function switchLang(lang) {
-  document.querySelectorAll('[data-ru]').forEach(el => {
-    el.innerHTML = el.getAttribute('data-' + lang);
-  });
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>U15 · АБАЙ АРЕНА · 3–5 МАЯ 2026</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700;900&family=Inter:wght@400;700&family=Public+Sans:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface-container-low":     "#1c1b1b",
+        "on-primary-fixed":          "#281900",
+        "surface-container-high":    "#2a2a2a",
+        "outline-variant":           "#504536",
+        "tertiary-container":        "#7098ff",
+        "on-surface-variant":        "#d4c4b0",
+        "surface-dim":               "#131313",
+        "on-primary":                "#422c00",
+        "surface-bright":            "#3a3939",
+        "surface-container":         "#201f1f",
+        "surface-container-lowest":  "#0e0e0e",
+        "on-surface":                "#e5e2e1",
+        "on-background":             "#e5e2e1",
+        "primary-container":         "#c8922a",
+        "surface-container-highest": "#353534",
+        "surface":                   "#131313",
+        "background":                "#131313",
+        "secondary-container":       "#cb2200",
+        "primary":                   "#f8bc51",
+        "outline":                   "#9c8f7c",
+        "tertiary":                  "#b2c5ff",
+        "surface-variant":           "#353534"
+      },
+      borderRadius: { DEFAULT:"0px", lg:"0px", xl:"0px", full:"0px" },
+      fontFamily: { headline:["Space Grotesk"], body:["Inter"], label:["Public Sans"] }
+    }
+  }
 }
 </script>
+
+<style>
+@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+.marquee-track { display:flex; white-space:nowrap; animation:marquee 28s linear infinite; }
+.koshkar-muiz  { background-image:radial-gradient(#504536 0.5px,transparent 0.5px); background-size:24px 24px; pointer-events:none; }
+.material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+.reveal { opacity:0; transform:translateX(-28px); transition:opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity:1; transform:none; }
+.field-row { border-bottom:2px solid #9c8f7c; transition:border-color .25s; }
+.field-row:focus-within { border-bottom-color:#f8bc51; }
+.field-row input, .field-row select {
+  color: #e5e2e1;
+  cursor: text;
+}
+.field-row input::placeholder { color: rgba(212,196,176,0.25); }
+.field-row input:focus { color: #ffffff; }
+/* ── Country flags ── */
+.flag-img {
+  display: block;
+  width: 40px;
+  height: 27px;
+  object-fit: cover;
+  margin: 0 auto 8px;
+  border-radius: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+nav a.nav-link { position:relative; }
+nav a.nav-link::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:#f8bc51; transition:width .25s; }
+nav a.nav-link:hover::after, nav a.nav-link.active::after { width:100%; }
+
+/* ── Language switcher ── */
+.lang-switcher { display:flex; align-items:center; gap:0; }
+.lang-btn {
+  font-family:"Public Sans",sans-serif; font-weight:900; font-size:11px;
+  letter-spacing:.15em; text-transform:uppercase;
+  padding:7px 11px; cursor:pointer; color:#504536;
+  transition:color .2s; background:transparent; border:none; outline:none;
+  position:relative;
+}
+.lang-btn::after {
+  content:''; position:absolute; bottom:0; left:11px; right:11px;
+  height:2px; background:#f8bc51;
+  transform:scaleX(0); transform-origin:left; transition:transform .2s;
+}
+.lang-btn:hover { color:#d4c4b0; }
+.lang-btn.active { color:#f8bc51; }
+.lang-btn.active::after { transform:scaleX(1); }
+.lang-sep { color:#504536; font-size:13px; line-height:1; user-select:none; padding:0 1px; }
+
+/* ── i18n fade ── */
+.i18n-fade { transition:opacity .2s ease; }
+.i18n-fade.fading { opacity:0; pointer-events:none; }
+</style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 scroll-smooth">
+<!-- ════════════════════════════════
+     DICTIONARY + I18N ENGINE
+════════════════════════════════ -->
+<script>
+const DICT = {
+ru:{
+  "title":"U15 · АБАЙ АРЕНА · 3–5 МАЯ 2026",
+  "nav.t":"ТУРНИР","nav.w":"ВЕСА","nav.r":"РЕГЛАМЕНТ","nav.a":"НАГРАДЫ","nav.m":"МАНИФЕСТ","nav.reg":"РЕГИСТРАЦИЯ",
+  "hero.tag":"СЕМЕЙ · КАЗАХСТАН · 3–5 МАЯ 2026",
+  "hero.h1":"ЗОЛОТОЕ НАСЛЕДИЕ","hero.h2":"— В КАЖДОМ ЗАХВАТЕ",
+  "hero.p":"Международный турнир по греко-римской борьбе (U15) памяти Олимпийского чемпиона Жаксалыка Ушкемпирова. Три ковра. Одиннадцать наций. Два дня истории.",
+  "hero.s1":"АЛТЫН МҰРА — ӘРБІР ӘДІСТЕ","hero.s2":"GOLDEN LEGACY — IN EVERY GRIP",
+  "hero.btn":"ПОДАТЬ ЗАЯВКУ",
+  "ab.lbl":"ОЛИМПИЙСКИЙ ЧЕМПИОН","ab.n1":"ЖАКСАЛЫК","ab.n2":"УШКЕМПИРОВ",
+  "ab.p":"Олимпийский чемпион Москвы-1980. Первый казахстанский олимпийский чемпион по греко-римской борьбе. Этот турнир хранит его золото живым — в каждом захвате нового поколения.",
+  "ab.yl":"Москва · Олимпийское золото","ab.kl":"Наилегчайший вес · Абсолютное доминирование",
+  "ab.lgn":"ЛЕГЕНДА",
+  "ab.t1":"WORLD CLASS","ab.p1":"Соревнования по стандартам UWW на трёх сертифицированных коврах.",
+  "ab.t2":"ЗОЛОТОЙ ДУХ","ab.p2":"Дисциплина и воля к победе — в следующем поколении борцов U15.",
+  "ab.t3":"АРХИВ ПОБЕД","ab.p3":"Техника и история советской конструктивистской школы борьбы.",
+  "mf.lbl":"МАНИФЕСТ ТУРНИРА","mf.h1":"ЗОЛОТОЕ НАСЛЕДИЕ —","mf.h2":"В КАЖДОМ ЗАХВАТЕ",
+  "mf.c1l":"ҚАЗАҚША",
+  "mf.c1p1":"Мұнда рух асқақтайды. Біз Абай топырағының қақ ортасында тұрмыз — қазақ сөзі мен намысы шыңдалған киелі мекенде.",
+  "mf.c1q":"«Аңыздың географиясы кеңейді. Бүгін Семей төрінде он мемлекеттің балуандары бас қосты.»",
+  "mf.c1p2":"Бұл бозбалалар небәрі 14–15 жаста. Оларда ойлануға уақыт жоқ. Кілемдегі әрбір белдесу — 1980 жылғы триумфтың жаңғырығы.",
+  "mf.c2l":"ENGLISH",
+  "mf.c2p1":"Spirit rises here. We stand in the heart of the Land of Abai — a city where the greatness of the Kazakh word and spirit was forged.",
+  "mf.c2q":"\"Every grip on this mat is an echo of the 1980 triumph. Every step onto the podium is an answer: Who is next?\"",
+  "mf.c2p2":"They are 14–15 years old. Two days to prove that Ushkempirov's legacy is a living energy capable of conquering the world.",
+  "mf.c3l":"РУССКИЙ",
+  "mf.c3p1":"Здесь возвышается дух. Семей — колыбель легенд: от мудрости просветителя Абая до несокрушимой мощи Хаджимукана.",
+  "mf.c3q":"«Золотое наследие — не в музеях. Золотое наследие — в каждом захвате.»",
+  "mf.c3p2":"Каждый юный атлет — живое доказательство того, что легенда продолжается в тебе. Эстафета — в твоих руках.",
+  "mf.cta":"Встань там, где стоял Ушкемпиров. Продолжи его путь.","mf.btn":"ТУРНИР ОТКРЫТ",
+  "vn.lbl":"МЕСТО ПРОВЕДЕНИЯ","vn.h1":"АБАЙ АРЕНА","vn.h2":"СЕМЕЙ",
+  "vn.mats":"Сертифицированных ковра","vn.nat":"Стран-участниц",
+  "vn.a1":"Аэропорты прибытия","vn.a2":"Семей (NQT) или Усть-Каменогорск (UKK).",
+  "vn.l1":"Адрес","vn.l2":"МКСК «Абай Арена», мкр. Карагайлы, 39, Семей, область Абай, Казахстан.",
+  "vn.s1":"Трансляция","vn.s2":"Прямой эфир на платформе UWW+. Симметричный канал 100 Мбит/с.",
+  "vn.bdg":"МКСК АБАЙ АРЕНА",
+  "wt.h":"ВЕСОВЫЕ КАТЕГОРИИ","wt.min":"МИНИМУМ","wt.max":"МАКСИМУМ","wt.u":"U15","wt.el":"U15 ЭЛИТА",
+  "rg.h":"РЕГЛАМЕНТ",
+  "rg.p":"Все участники соревнуются по правилам UWW для возрастной категории U15. Регистрация через UWW Athena не позднее 30 дней до старта.",
+  "rg.at":"Антидопинг","rg.ap":"Строгое соблюдение требований ВАДА и UWW. Изолированная станция допинг-контроля на территории арены.",
+  "rg.ct":"Система Challenge","rg.cp":"Обязательный видео-повтор на всех трёх коврах согласно регламенту UWW.",
+  "rg.d1h":"МАЙ / ДЕНЬ 1","rg.d1s":"Квалификация и отборочные поединки",
+  "rg.d1t1":"08:00 — Медицинский контроль","rg.d1t2":"09:00 — Официальное взвешивание","rg.d1t3":"11:00 — Квалификационные поединки",
+  "rg.d2h":"МАЙ / ДЕНЬ 2","rg.d2s":"Утешительные и финальные поединки",
+  "rg.d2t1":"08:00 — Повторное взвешивание (0 кг)","rg.d2t2":"10:00 — Утешительные поединки","rg.d2t3":"16:00 — Церемония открытия","rg.d2t4":"17:00 — Финалы и награждение",
+  "rg.d3h":"МАЙ / ДЕНЬ 3","rg.d3s":"Закрытие и отъезд делегаций",
+  "rg.d3t1":"Трансфер аэропорт — отель — Абай Арена","rg.d3t2":"Организован оргкомитетом LOC",
+  "aw.lbl":"ПРИЗОВОЙ ФОНД","aw.h1":"ЗОЛОТЫЕ","aw.h2":"МЕДАЛИ","aw.h3":"ЧЕСТИ",
+  "aw.p":"Победители в каждой весовой категории получат эксклюзивную медаль и диплом. Лучший борец турнира — специальный кубок «Ushkempirov Legacy».",
+  "aw.sub":"Денежные призы и ценные подарки устанавливаются Оргкомитетом и спонсорами турнира.",
+  "aw.g":"ЗОЛОТО","aw.s":"СЕРЕБРО","aw.b":"БРОНЗА",
+  "nt.h":"СТРАНЫ-УЧАСТНИЦЫ",
+  "fr.h":"ВОЙТИ В АРЕНУ","fr.p":"Регистрация открыта для официальных представителей федераций. Все документы UWW должны быть актуальны. Дедлайн — за 30 дней до старта.",
+  "fr.cd":"ОБРАТНЫЙ ОТСЧЁТ ДО ВЗВЕШИВАНИЯ",
+  "fr.days":"Дней","fr.hours":"Часов","fr.mins":"Минут","fr.secs":"Секунд",
+  "fr.fn":"Имя спортсмена","fr.fc":"Код страны","fr.fw":"Весовая категория","fr.fwph":"Выберите вес",
+  "fr.fl":"Номер лицензии UWW 2026","fr.fe":"Email официального представителя","fr.fb":"Федерация / Клуб",
+  "fr.btn":"ПОДАТЬ ОФИЦИАЛЬНУЮ ЗАЯВКУ",
+  "fr.leg":"Подавая заявку, вы подтверждаете соответствие всем требованиям UWW International.",
+  "fr.ok":"Заявка принята! Наши менеджеры свяжутся с вами для подтверждения.",
+  "ft.nav":"НАВИГАЦИЯ","ft.con":"КОНТАКТЫ",
+  "ft.l1":"Турнир","ft.l2":"Регламент","ft.l3":"Манифест","ft.l4":"Регистрация",
+  "ft.copy":"© 2026 ОО «Федерация греко-римской, вольной и женской борьбы области Абай» (LOC). Международный турнир памяти Олимпийского чемпиона Жаксалыка Ушкемпирова."
+},
+en:{
+  "title":"U15 · ABAI ARENA · MAY 3–5, 2026",
+  "nav.t":"TOURNAMENT","nav.w":"WEIGHTS","nav.r":"RULES","nav.a":"AWARDS","nav.m":"MANIFESTO","nav.reg":"REGISTER",
+  "hero.tag":"SEMEY · KAZAKHSTAN · MAY 3–5, 2026",
+  "hero.h1":"GOLDEN LEGACY","hero.h2":"— IN EVERY GRIP",
+  "hero.p":"International Greco-Roman Wrestling Tournament (U15) in memory of Olympic Champion Zhaksylyk Ushkempirov. Three mats. Eleven nations. Two days of history.",
+  "hero.s1":"АЛТЫН МҰРА — ӘРБІР ӘДІСТЕ","hero.s2":"ЗОЛОТОЕ НАСЛЕДИЕ — В КАЖДОМ ЗАХВАТЕ",
+  "hero.btn":"SUBMIT ENTRY",
+  "ab.lbl":"OLYMPIC CHAMPION","ab.n1":"ZHAKSYLYK","ab.n2":"USHKEMPIROV",
+  "ab.p":"1980 Olympic Champion in Moscow. Kazakhstan's first Olympic gold medalist in Greco-Roman wrestling. This tournament keeps his gold alive — in every grip of a new generation.",
+  "ab.yl":"Moscow · Olympic Gold","ab.kl":"Light Flyweight · Absolute Dominance",
+  "ab.lgn":"LEGEND",
+  "ab.t1":"WORLD CLASS","ab.p1":"Competition under UWW standards on three certified mats.",
+  "ab.t2":"GOLDEN SPIRIT","ab.p2":"Discipline and the will to win for the next generation of U15 athletes.",
+  "ab.t3":"THE ARCHIVE","ab.p3":"The technique and history of the Soviet constructivist wrestling tradition.",
+  "mf.lbl":"TOURNAMENT MANIFESTO","mf.h1":"GOLDEN LEGACY —","mf.h2":"IN EVERY GRIP",
+  "mf.c1l":"ҚАЗАҚША",
+  "mf.c1p1":"Мұнда рух асқақтайды. Біз Абай топырағының қақ ортасында тұрмыз — қазақ сөзі мен намысы шыңдалған киелі мекенде.",
+  "mf.c1q":"«Аңыздың географиясы кеңейді. Бүгін Семей төрінде он мемлекеттің балуандары бас қосты.»",
+  "mf.c1p2":"Бұл бозбалалар небәрі 14–15 жаста. Оларда ойлануға уақыт жоқ. Кілемдегі әрбір белдесу — 1980 жылғы триумфтың жаңғырығы.",
+  "mf.c2l":"ENGLISH",
+  "mf.c2p1":"Spirit rises here. We stand in the heart of the Land of Abai — a city where the greatness of the Kazakh word and spirit was forged.",
+  "mf.c2q":"\"Every grip on this mat is an echo of the 1980 triumph. Every step onto the podium is an answer: Who is next?\"",
+  "mf.c2p2":"They are 14–15 years old. Two days to prove that Ushkempirov's legacy is a living energy capable of conquering the world.",
+  "mf.c3l":"РУССКИЙ",
+  "mf.c3p1":"Spirit rises here. Semey is the cradle of legends: from the wisdom of Abai to the indomitable power of Kazhymukan.",
+  "mf.c3q":"\"The Golden Legacy is not in a museum. The Golden Legacy is in every grip.\"",
+  "mf.c3p2":"Every young athlete is living proof that the legend continues in you. The baton is in your hands.",
+  "mf.cta":"Stand where Ushkempirov stood. Continue his path.","mf.btn":"TOURNAMENT IS OPEN",
+  "vn.lbl":"VENUE","vn.h1":"ABAI ARENA","vn.h2":"SEMEY",
+  "vn.mats":"Certified Mats","vn.nat":"Invited Nations",
+  "vn.a1":"Arrival Airports","vn.a2":"Semey (NQT) or Ust-Kamenogorsk (UKK).",
+  "vn.l1":"Address","vn.l2":"MCSC \"Abai Arena\", Karagaily Microdistrict 39, Semey, Abai Region, Kazakhstan.",
+  "vn.s1":"Live Stream","vn.s2":"Live broadcast on UWW+. Symmetric 100 Mbps channel.",
+  "vn.bdg":"MCSC ABAI ARENA",
+  "wt.h":"WEIGHT CATEGORIES","wt.min":"MINIMUM","wt.max":"MAXIMUM","wt.u":"U15","wt.el":"U15 ELITE",
+  "rg.h":"REGULATIONS",
+  "rg.p":"All participants must comply with UWW international rules for U15. Registration via UWW Athena no later than 30 days before the event.",
+  "rg.at":"Anti-Doping","rg.ap":"Strict compliance with WADA and UWW anti-doping regulations. Isolated doping control station on the arena premises.",
+  "rg.ct":"Challenge System","rg.cp":"Mandatory video replay on all three mats in accordance with UWW regulations.",
+  "rg.d1h":"MAY / DAY 1","rg.d1s":"Qualification & Elimination Rounds",
+  "rg.d1t1":"08:00 — Medical Control","rg.d1t2":"09:00 — Official Weigh-in","rg.d1t3":"11:00 — Qualification Matches",
+  "rg.d2h":"MAY / DAY 2","rg.d2s":"Repechage & Finals",
+  "rg.d2t1":"08:00 — Re-weigh-in (0 kg allowance)","rg.d2t2":"10:00 — Repechage Matches","rg.d2t3":"16:00 — Opening Ceremony","rg.d2t4":"17:00 — Finals & Awards",
+  "rg.d3h":"MAY / DAY 3","rg.d3s":"Closing & Departure",
+  "rg.d3t1":"Transfer: Airport — Hotel — Abai Arena","rg.d3t2":"Organised by the LOC",
+  "aw.lbl":"THE PRIZE","aw.h1":"GOLDEN","aw.h2":"MEDALIST","aw.h3":"HONORS",
+  "aw.p":"Winners in each weight category receive an exclusive medal and diploma. The best wrestler gets the special \"Ushkempirov Legacy\" Trophy.",
+  "aw.sub":"Cash prizes and gifts are determined by the Organizing Committee and tournament sponsors.",
+  "aw.g":"GOLD","aw.s":"SILVER","aw.b":"BRONZE",
+  "nt.h":"INVITED NATIONS",
+  "fr.h":"ENTER THE ARENA","fr.p":"Registration is open for official federation representatives. All UWW documents must be current. Deadline — 30 days before the event.",
+  "fr.cd":"COUNTDOWN TO WEIGH-IN",
+  "fr.days":"Days","fr.hours":"Hours","fr.mins":"Mins","fr.secs":"Secs",
+  "fr.fn":"Athlete Full Name","fr.fc":"Country Code","fr.fw":"Weight Class","fr.fwph":"Select weight",
+  "fr.fl":"UWW License ID 2026","fr.fe":"Official Email Address","fr.fb":"Federation / Club",
+  "fr.btn":"SUBMIT OFFICIAL ENTRY",
+  "fr.leg":"By submitting, you confirm full compliance with UWW International requirements.",
+  "fr.ok":"Entry received! Our team will contact you for confirmation.",
+  "ft.nav":"NAVIGATION","ft.con":"CONTACTS",
+  "ft.l1":"Tournament","ft.l2":"Regulations","ft.l3":"Manifesto","ft.l4":"Register",
+  "ft.copy":"© 2026 Wrestling Federation of Abai Region (LOC). International Tournament in Memory of Olympic Champion Zhaksylyk Ushkempirov."
+},
+kz:{
+  "title":"U15 · АБАЙ АРЕНА · 3–5 МАМЫР 2026",
+  "nav.t":"ТУРНИР","nav.w":"САЛМАҚ","nav.r":"ЕРЕЖЕЛЕР","nav.a":"МАРАПАТ","nav.m":"МАНИФЕСТ","nav.reg":"ТІРКЕЛУ",
+  "hero.tag":"СЕМЕЙ · ҚАЗАҚСТАН · 3–5 МАМЫР 2026",
+  "hero.h1":"АЛТЫН МҰРА","hero.h2":"— ӘРБІР ӘДІСТЕ",
+  "hero.p":"Олимпиада чемпионы Жақсылық Үшкемпіровті еске алуға арналған грек-рим күресінен жасөспірімдер арасындағы (U15) халықаралық турнир. Үш килем. Он бір мемлекет. Тарихтың екі күні.",
+  "hero.s1":"ЗОЛОТОЕ НАСЛЕДИЕ — В КАЖДОМ ЗАХВАТЕ","hero.s2":"GOLDEN LEGACY — IN EVERY GRIP",
+  "hero.btn":"ӨТІНІМ БЕРУ",
+  "ab.lbl":"ОЛИМПИАДА ЧЕМПИОНЫ","ab.n1":"ЖАҚСЫЛЫҚ","ab.n2":"ҮШКЕМПІРОВ",
+  "ab.p":"1980 жылғы Мәскеу Олимпиадасының чемпионы. Грек-рим күресінен Қазақстанның тұңғыш олимпиада чемпионы. Бұл турнир оның алтынын тірі ұстайды — жаңа буынның әрбір әдісінде.",
+  "ab.yl":"Мәскеу · Олимпиада алтыны","ab.kl":"Ең жеңіл салмақ · Абсолютті үстемдік",
+  "ab.lgn":"АҢЫЗ",
+  "ab.t1":"WORLD CLASS","ab.p1":"UWW халықаралық стандарттары бойынша үш сертификатталған килемде жарыс.",
+  "ab.t2":"АЛТЫН РУХ","ab.p2":"U15 жасөспірімдерінің келесі буынына тәртіп пен жеңіске деген ерік-жігер.",
+  "ab.t3":"ЖЕҢІС МҰРАҒАТЫ","ab.p3":"Кеңестік конструктивистік күрес мектебінің техникасы мен тарихы.",
+  "mf.lbl":"ТУРНИР МАНИФЕСТІ","mf.h1":"АЛТЫН МҰРА —","mf.h2":"ӘРБІР ӘДІСТЕ",
+  "mf.c1l":"ҚАЗАҚША",
+  "mf.c1p1":"Мұнда рух асқақтайды. Біз Абай топырағының қақ ортасында тұрмыз — қазақ сөзі мен намысы шыңдалған киелі мекенде.",
+  "mf.c1q":"«Аңыздың географиясы кеңейді. Бүгін Семей төрінде он мемлекеттің балуандары бас қосты.»",
+  "mf.c1p2":"Бұл бозбалалар небәрі 14–15 жаста. Оларда ойлануға уақыт жоқ. Кілемдегі әрбір белдесу — 1980 жылғы триумфтың жаңғырығы.",
+  "mf.c2l":"ENGLISH",
+  "mf.c2p1":"Spirit rises here. We stand in the heart of the Land of Abai — a city where the greatness of the Kazakh word and spirit was forged.",
+  "mf.c2q":"\"Every grip on this mat is an echo of the 1980 triumph. Every step onto the podium is an answer: Who is next?\"",
+  "mf.c2p2":"They are 14–15 years old. Two days to prove that Ushkempirov's legacy is a living energy capable of conquering the world.",
+  "mf.c3l":"РУССКИЙ",
+  "mf.c3p1":"Здесь возвышается дух. Семей — колыбель легенд: от мудрости просветителя Абая до несокрушимой мощи Хаджимукана.",
+  "mf.c3q":"«Золотое наследие — не в музеях. Золотое наследие — в каждом захвате.»",
+  "mf.c3p2":"Каждый юный атлет — живое доказательство того, что легенда продолжается в тебе. Эстафета — в твоих руках.",
+  "mf.cta":"Үшкемпіров тұрған жерге сен де тұр. Оның жолын жалға!","mf.btn":"ТУРНИР АШЫҚ",
+  "vn.lbl":"ӨТУ ОРНЫ","vn.h1":"АБАЙ АРЕНА","vn.h2":"СЕМЕЙ",
+  "vn.mats":"Сертификатталған килем","vn.nat":"Қатысушы мемлекет",
+  "vn.a1":"Ұшу айлақтары","vn.a2":"Семей (NQT) немесе Өскемен (UKK).",
+  "vn.l1":"Мекенжай","vn.l2":"ХКСП «Абай Арена», Қарағайлы шағынауданы 39, Семей, Абай облысы.",
+  "vn.s1":"Тікелей эфир","vn.s2":"UWW+ платформасында тікелей трансляция. 100 Мбит/с арнасы.",
+  "vn.bdg":"ХКСП АБАЙ АРЕНА",
+  "wt.h":"САЛМАҚ САНАТТАРЫ","wt.min":"МИНИМУМ","wt.max":"МАКСИМУМ","wt.u":"U15","wt.el":"U15 ЭЛИТА",
+  "rg.h":"ЕРЕЖЕЛЕР",
+  "rg.p":"Барлық қатысушылар U15 жас санатына арналған UWW халықаралық ережелері бойынша жарысады. Тіркелу UWW Athena жүйесі арқылы 30 күн бұрын жүргізіледі.",
+  "rg.at":"Допингке қарсы","rg.ap":"WADA мен UWW талаптарын қатаң сақтау. Арена аумағында допинг-бақылау бекеті.",
+  "rg.ct":"Challenge жүйесі","rg.cp":"UWW регламентіне сәйкес үш килемнің барлығында міндетті бейнежазба қайталауы.",
+  "rg.d1h":"МАМЫР / 1-КҮН","rg.d1s":"Іріктеу және алдын ала кездесулер",
+  "rg.d1t1":"08:00 — Медициналық бақылау","rg.d1t2":"09:00 — Ресми өлшеу","rg.d1t3":"11:00 — Іріктеу кездесулері",
+  "rg.d2h":"МАМЫР / 2-КҮН","rg.d2s":"Жұбату және финалдық кездесулер",
+  "rg.d2t1":"08:00 — Қайта өлшеу (0 кг)","rg.d2t2":"10:00 — Жұбату кездесулері","rg.d2t3":"16:00 — Ашылу рәсімі","rg.d2t4":"17:00 — Финалдар және жүлделеу",
+  "rg.d3h":"МАМЫР / 3-КҮН","rg.d3s":"Жабылу және делегацияларды ұзату",
+  "rg.d3t1":"Трансфер: аэропорт — қонақ үй — Абай Арена","rg.d3t2":"Ұйымдастыру комитеті (LOC) ұйымдастырады",
+  "aw.lbl":"ЖҮЛДЕЛЕР","aw.h1":"АЛТЫН","aw.h2":"МЕДАЛЬ","aw.h3":"АБЫРОЙЫ",
+  "aw.p":"Әр салмақ санатының жеңімпаздары эксклюзивті медаль мен диплом алады. Үздік балуан «Ushkempirov Legacy» арнайы кубогын иеленеді.",
+  "aw.sub":"Ақшалай сыйлықтар мен бағалы сыйлықтар Ұйымдастыру комитеті тарапынан белгіленеді.",
+  "aw.g":"АЛТЫН","aw.s":"КҮМІС","aw.b":"ҚОЛА",
+  "nt.h":"ҚАТЫСУШЫ МЕМЛЕКЕТТЕР",
+  "fr.h":"АРЕНАҒА КІР","fr.p":"Тіркелу федерацияларның ресми өкілдеріне ашық. UWW құжаттары жаңартылуы тиіс. Мерзімі — 30 күн бұрын.",
+  "fr.cd":"ӨЛШЕУГЕ ДЕЙІНГІ КЕРІ САНАҚ",
+  "fr.days":"Күн","fr.hours":"Сағат","fr.mins":"Минут","fr.secs":"Секунд",
+  "fr.fn":"Спортшының аты-жөні","fr.fc":"Ел коды","fr.fw":"Салмақ санаты","fr.fwph":"Салмақты таңдаңыз",
+  "fr.fl":"UWW 2026 лицензия нөмірі","fr.fe":"Ресми өкілдің электрондық поштасы","fr.fb":"Федерация / Клуб",
+  "fr.btn":"РЕСМИ ӨТІНІМ БЕРУ",
+  "fr.leg":"Өтінім бере отырып, сіз UWW International барлық талаптарына сәйкестігіңізді растайсыз.",
+  "fr.ok":"Өтінім қабылданды! Біздің менеджерлер растау үшін сізге хабарласады.",
+  "ft.nav":"НАВИГАЦИЯ","ft.con":"БАЙЛАНЫС",
+  "ft.l1":"Турнир","ft.l2":"Ережелер","ft.l3":"Манифест","ft.l4":"Тіркелу",
+  "ft.copy":"© 2026 «Абай облысының грек-рим, еркін және әйелдер күресі федерациясы» ҚБ (LOC). Олимпиада чемпионы Жақсылық Үшкемпіровтің еске алу халықаралық турнирі."
+}
+};
 
-<!-- HEADER -->
-<header class="fixed w-full bg-blue-900 text-white shadow z-50">
-  <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
-    <div class="font-bold text-lg">Федерация борьбы области Абай</div>
-    <div class="space-x-2">
-      <button onclick="switchLang('ru')" class="bg-white text-blue-900 px-3 py-1 rounded">RU</button>
-      <button onclick="switchLang('kz')" class="bg-yellow-400 text-blue-900 px-3 py-1 rounded">KZ</button>
+let lang = localStorage.getItem('u15lang') || 'ru';
+const t = k => (DICT[lang]&&DICT[lang][k]) || DICT.ru[k] || k;
+
+function applyLang(animate) {
+  const fade = animate !== false;
+  const targets = document.querySelectorAll('.i18n-fade');
+
+  const doApply = () => {
+    document.documentElement.lang = lang;
+    document.title = t('title');
+    document.querySelectorAll('[data-k]').forEach(el => {
+      const v = t(el.dataset.k);
+      if (el.tagName==='INPUT'||el.tagName==='TEXTAREA') el.placeholder = v;
+      else el.textContent = v;
+    });
+    const sel = document.getElementById('wsel');
+    if (sel) sel.options[0].textContent = t('fr.fwph');
+    ['days','hours','mins','secs'].forEach(k=>{
+      const el=document.getElementById('lbl-'+k); if(el) el.textContent=t('fr.'+k);
+    });
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.l===lang));
+    localStorage.setItem('u15lang', lang);
+    if (fade) targets.forEach(el=>el.classList.remove('fading'));
+  };
+
+  if (fade) { targets.forEach(el=>el.classList.add('fading')); setTimeout(doApply, 200); }
+  else doApply();
+}
+
+function setLang(l) { if(l===lang) return; lang=l; applyLang(true); }
+</script>
+
+<body class="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary-fixed">
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="fixed top-0 w-full z-[100] bg-[#131313]/80 backdrop-blur-xl flex justify-between items-center px-6 py-4 gap-4">
+  <div class="text-xl font-black italic tracking-tighter text-primary font-headline uppercase select-none shrink-0">EDITORIAL ATHLETE</div>
+
+  <div class="hidden md:flex gap-7 items-center i18n-fade">
+    <a class="nav-link text-on-surface-variant font-headline uppercase tracking-tighter font-black hover:text-primary transition-colors text-sm" href="#tournament" data-k="nav.t">ТУРНИР</a>
+    <a class="nav-link text-on-surface-variant font-headline uppercase tracking-tighter font-black hover:text-primary transition-colors text-sm" href="#weights"    data-k="nav.w">ВЕСА</a>
+    <a class="nav-link text-on-surface-variant font-headline uppercase tracking-tighter font-black hover:text-primary transition-colors text-sm" href="#regs"       data-k="nav.r">РЕГЛАМЕНТ</a>
+    <a class="nav-link text-on-surface-variant font-headline uppercase tracking-tighter font-black hover:text-primary transition-colors text-sm" href="#awards"     data-k="nav.a">НАГРАДЫ</a>
+    <a class="nav-link text-on-surface-variant font-headline uppercase tracking-tighter font-black hover:text-primary transition-colors text-sm" href="#manifesto"  data-k="nav.m">МАНИФЕСТ</a>
+  </div>
+
+  <div class="flex items-center gap-3 shrink-0">
+    <!-- SWITCHER -->
+    <div class="lang-switcher">
+      <button class="lang-btn" data-l="kz" onclick="setLang('kz')">KZ</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn active" data-l="ru" onclick="setLang('ru')">RU</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" data-l="en" onclick="setLang('en')">EN</button>
+    </div>
+    <div class="w-px h-5 bg-outline-variant/40"></div>
+    <a class="bg-primary text-on-primary-fixed px-5 py-2 font-headline font-black uppercase tracking-tighter hover:bg-white transition-all active:scale-95 text-xs whitespace-nowrap i18n-fade" href="#register" data-k="nav.reg">РЕГИСТРАЦИЯ</a>
+  </div>
+</nav>
+
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="relative min-h-screen flex flex-col justify-end pt-24 overflow-hidden" id="tournament">
+  <div class="absolute inset-0 z-0">
+    <img class="w-full h-full object-cover grayscale opacity-35 brightness-50" src="assets/arena-flags.png" alt="Абай Арена"/>
+    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+  </div>
+  <div class="relative z-10 px-6 pb-20 w-full max-w-[1440px] mx-auto i18n-fade">
+    <div class="mb-4">
+      <span class="bg-secondary-container text-white px-4 py-1 font-label font-black text-xs tracking-[0.2em] uppercase" data-k="hero.tag">СЕМЕЙ · КАЗАХСТАН · 3–5 МАЯ 2026</span>
+    </div>
+    <h1 class="font-headline font-black text-6xl md:text-[9rem] leading-[0.85] uppercase tracking-tighter mb-8 reveal">
+      <span data-k="hero.h1">ЗОЛОТОЕ НАСЛЕДИЕ</span><br/>
+      <span class="text-primary-container" data-k="hero.h2">— В КАЖДОМ ЗАХВАТЕ</span>
+    </h1>
+    <div class="flex flex-col md:flex-row gap-12 items-start md:items-end">
+      <div class="max-w-xl">
+        <p class="text-on-surface-variant text-xl md:text-2xl font-light leading-snug mb-8 border-l-4 border-primary pl-6" data-k="hero.p">Международный турнир.</p>
+        <div class="flex flex-wrap gap-4 font-headline text-sm font-black text-on-surface-variant/40">
+          <span data-k="hero.s1">АЛТЫН МҰРА</span><span class="opacity-40">|</span><span data-k="hero.s2">GOLDEN LEGACY</span>
+        </div>
+      </div>
+      <div class="ml-auto flex flex-col items-end gap-2">
+        <div class="font-label text-8xl font-black text-surface-container-highest/25 tracking-tighter">2026</div>
+        <a href="#register" class="bg-primary text-on-primary-fixed px-12 py-5 text-2xl font-headline font-black uppercase tracking-tighter hover:bg-white transition-all active:scale-95 inline-block" data-k="hero.btn">ПОДАТЬ ЗАЯВКУ</a>
+      </div>
     </div>
   </div>
-</header>
+</section>
 
-<!-- HERO -->
-<section class="h-screen flex items-center justify-center text-white text-center relative">
-  <div class="absolute inset-0 bg-blue-900"></div>
-  <div class="relative z-10 px-6 mt-16">
-    <h1 class="text-4xl md:text-6xl font-bold mb-6"
-        data-ru="Федерация борьбы области Абай"
-        data-kz="Абай облысы күрес федерациясы">
-        Федерация борьбы области Абай
-    </h1>
 
-    <p class="text-xl md:text-2xl italic mb-4"
-       data-ru="«Мы объединяемся ради силы, чести и будущего нашего региона»"
-       data-kz="«Біз өңіріміздің күші, абыройы және болашағы үшін бірігеміз»">
-       «Мы объединяемся ради силы, чести и будущего нашего региона»
-    </p>
+<!-- ═══════════ MARQUEE ═══════════ -->
+<div class="bg-tertiary-container text-white py-4 border-y border-outline-variant/20 overflow-hidden relative z-20">
+  <div class="marquee-track gap-12 font-headline font-black text-2xl uppercase tracking-widest">
+    <span class="mr-12">STRENGTH&nbsp;•&nbsp;HONOR&nbsp;•&nbsp;LEGACY</span><span class="mr-12 opacity-60">КҮШ&nbsp;•&nbsp;НАМЫС&nbsp;•&nbsp;МҰРА</span>
+    <span class="mr-12">СИЛА&nbsp;•&nbsp;ЧЕСТЬ&nbsp;•&nbsp;НАСЛЕДИЕ</span><span class="mr-12 opacity-60">STRENGTH&nbsp;•&nbsp;HONOR&nbsp;•&nbsp;LEGACY</span>
+    <span class="mr-12">КҮШ&nbsp;•&nbsp;НАМЫС&nbsp;•&nbsp;МҰРА</span><span class="mr-12 opacity-60">СИЛА&nbsp;•&nbsp;ЧЕСТЬ&nbsp;•&nbsp;НАСЛЕДИЕ</span>
+    <span class="mr-12">STRENGTH&nbsp;•&nbsp;HONOR&nbsp;•&nbsp;LEGACY</span><span class="mr-12 opacity-60">КҮШ&nbsp;•&nbsp;НАМЫС&nbsp;•&nbsp;МҰРА</span>
+    <span class="mr-12">СИЛА&nbsp;•&nbsp;ЧЕСТЬ&nbsp;•&nbsp;НАСЛЕДИЕ</span><span class="mr-12 opacity-60">STRENGTH&nbsp;•&nbsp;HONOR&nbsp;•&nbsp;LEGACY</span>
+  </div>
+</div>
 
-    <p class="text-lg tracking-widest"
-       data-ru="Греко-римская • Вольная • Женская борьба"
-       data-kz="Грек-рим • Еркін • Әйелдер күресі">
-       Греко-римская • Вольная • Женская борьба
-    </p>
+
+<!-- ═══════════ УШКЕМПИРОВ ═══════════ -->
+<section class="py-24 px-6 max-w-[1440px] mx-auto overflow-hidden">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-0 border border-outline-variant/15">
+    <div class="md:col-span-4 bg-surface-container-low flex flex-col justify-between reveal i18n-fade overflow-hidden">
+      <!-- profile photo strip -->
+      <div class="relative h-56 shrink-0 overflow-hidden">
+        <img class="w-full h-full object-cover object-center brightness-75"
+             src="assets/zhaksylyk_profile.png" alt="Жаксалык Ушкемпиров — профиль"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#1c1b1b] via-transparent to-transparent"></div>
+        <div class="absolute bottom-0 left-0 px-8 pb-4">
+          <div class="font-label font-black text-xs tracking-[0.3em] text-primary uppercase" data-k="ab.lbl">ОЛИМПИЙСКИЙ ЧЕМПИОН</div>
+        </div>
+      </div>
+      <!-- text -->
+      <div class="p-10 flex flex-col flex-1 justify-between">
+        <div>
+          <h2 class="font-headline font-black text-5xl uppercase leading-none mb-5">
+            <span data-k="ab.n1">ЖАКСАЛЫК</span><br/><span class="text-primary" data-k="ab.n2">УШКЕМПИРОВ</span>
+          </h2>
+          <p class="text-on-surface-variant leading-relaxed text-sm" data-k="ab.p">Олимпийский чемпион.</p>
+        </div>
+        <div class="mt-8 flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <span class="font-label font-black text-4xl text-primary">1980</span>
+            <span class="text-xs uppercase tracking-widest opacity-50" data-k="ab.yl">Москва</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="font-label font-black text-4xl text-primary">48KG</span>
+            <span class="text-xs uppercase tracking-widest opacity-50" data-k="ab.kl">Наилегчайший вес</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="md:col-span-5 relative min-h-[500px] overflow-hidden">
+      <img class="w-full h-full object-cover object-top" src="assets/ushkempirov.png" alt="Жаксалык Ушкемпиров"/>
+      <div class="absolute top-0 right-0 p-8">
+        <div class="bg-primary text-on-primary-fixed p-4 font-headline font-black text-6xl leading-none i18n-fade" data-k="ab.lgn">ЛЕГЕНДА</div>
+      </div>
+    </div>
+    <div class="md:col-span-3 bg-surface-container-high p-8 flex flex-col gap-8 border-l border-outline-variant/15 i18n-fade">
+      <div class="border-b border-outline-variant/15 pb-8">
+        <span class="material-symbols-outlined text-primary text-4xl mb-4 block" style="font-variation-settings:'FILL' 1;">military_tech</span>
+        <h3 class="font-headline font-black uppercase text-xl mb-2" data-k="ab.t1">WORLD CLASS</h3>
+        <p class="text-sm opacity-60" data-k="ab.p1">UWW стандарты.</p>
+      </div>
+      <div class="border-b border-outline-variant/15 pb-8">
+        <span class="material-symbols-outlined text-primary text-4xl mb-4 block" style="font-variation-settings:'FILL' 1;">workspace_premium</span>
+        <h3 class="font-headline font-black uppercase text-xl mb-2" data-k="ab.t2">ЗОЛОТОЙ ДУХ</h3>
+        <p class="text-sm opacity-60" data-k="ab.p2">Дисциплина.</p>
+      </div>
+      <div>
+        <span class="material-symbols-outlined text-primary text-4xl mb-4 block" style="font-variation-settings:'FILL' 1;">history_edu</span>
+        <h3 class="font-headline font-black uppercase text-xl mb-2" data-k="ab.t3">АРХИВ ПОБЕД</h3>
+        <p class="text-sm opacity-60" data-k="ab.p3">История школы.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- О ФЕДЕРАЦИИ -->
-<section class="py-20 bg-white text-center">
-<div class="max-w-4xl mx-auto px-6">
-<h2 class="text-3xl font-bold text-blue-900 mb-8"
-    data-ru="О Федерации и Миссия"
-    data-kz="Федерация туралы және миссиясы">
-    О Федерации и Миссия
-</h2>
 
-<p class="mb-6"
-   data-ru="Мы создаем условия, где каждый ребенок может раскрыть свой потенциал. Мы служим интересам общества, спортсменов и государства."
-   data-kz="Біз әрбір бала өз әлеуетін аша алатын жағдай жасаймыз. Біз қоғамның, спортшылардың және мемлекеттің мүддесіне қызмет етеміз.">
-   Мы создаем условия, где каждый ребенок может раскрыть свой потенциал...
-</p>
-
-<blockquote class="bg-blue-50 p-6 rounded-xl italic text-blue-900"
-data-ru="«Формирование устойчивой системы развития спортивной борьбы в Абайской области, направленной на воспитание физически крепкой, духовно сильной и социально ответственной молодежи, способной достойно представлять регион и Республику Казахстан»."
-data-kz="«Абай облысында спорттық күресті дамытудың тұрақты жүйесін қалыптастыру, дене шыныққан, рухани мықты және әлеуметтік жауапты жастарды тәрбиелеу»."
->
-«Формирование устойчивой системы развития спортивной борьбы...»
-</blockquote>
-</div>
+<!-- ═══════════ МАНИФЕСТ ═══════════ -->
+<section class="bg-surface-container-lowest py-24 relative overflow-hidden" id="manifesto">
+  <div class="koshkar-muiz absolute inset-0 opacity-[0.06]"></div>
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+    <span class="font-headline font-black text-[22vw] text-white/[0.02] uppercase tracking-tighter select-none">МҰРА</span>
+  </div>
+  <div class="relative z-10 max-w-[1440px] mx-auto px-6">
+    <div class="mb-16 reveal i18n-fade">
+      <span class="font-label font-bold text-primary tracking-[0.4em] uppercase block mb-4 text-sm" data-k="mf.lbl">МАНИФЕСТ</span>
+      <h2 class="font-headline font-black text-6xl md:text-8xl uppercase leading-none">
+        <span data-k="mf.h1">ЗОЛОТОЕ НАСЛЕДИЕ —</span><br/>
+        <span class="text-primary" data-k="mf.h2">В КАЖДОМ ЗАХВАТЕ</span>
+      </h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-outline-variant/15 mb-16 i18n-fade">
+      <div class="p-10 border-b md:border-b-0 md:border-r border-outline-variant/15 reveal">
+        <div class="font-label font-black text-xs tracking-[0.3em] text-primary mb-6 uppercase" data-k="mf.c1l">ҚАЗАҚША</div>
+        <p class="text-on-surface-variant text-sm leading-relaxed mb-6" data-k="mf.c1p1"></p>
+        <blockquote class="font-headline font-black text-xl text-white border-l-2 border-primary pl-4 leading-tight" data-k="mf.c1q"></blockquote>
+        <p class="text-on-surface-variant text-sm leading-relaxed mt-6" data-k="mf.c1p2"></p>
+      </div>
+      <div class="p-10 border-b md:border-b-0 md:border-r border-outline-variant/15 bg-surface-container reveal">
+        <div class="font-label font-black text-xs tracking-[0.3em] text-primary mb-6 uppercase" data-k="mf.c2l">ENGLISH</div>
+        <p class="text-on-surface-variant text-sm leading-relaxed mb-6" data-k="mf.c2p1"></p>
+        <blockquote class="font-headline font-black text-xl text-white border-l-2 border-primary pl-4 leading-tight" data-k="mf.c2q"></blockquote>
+        <p class="text-on-surface-variant text-sm leading-relaxed mt-6" data-k="mf.c2p2"></p>
+      </div>
+      <div class="p-10 reveal">
+        <div class="font-label font-black text-xs tracking-[0.3em] text-primary mb-6 uppercase" data-k="mf.c3l">РУССКИЙ</div>
+        <p class="text-on-surface-variant text-sm leading-relaxed mb-6" data-k="mf.c3p1"></p>
+        <blockquote class="font-headline font-black text-xl text-white border-l-2 border-primary pl-4 leading-tight" data-k="mf.c3q"></blockquote>
+        <p class="text-on-surface-variant text-sm leading-relaxed mt-6" data-k="mf.c3p2"></p>
+      </div>
+    </div>
+    <div class="bg-primary p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 reveal i18n-fade">
+      <p class="font-headline font-black text-2xl md:text-4xl text-on-primary-fixed uppercase tracking-tight leading-none" data-k="mf.cta">Встань там, где стоял Ушкемпиров.</p>
+      <a href="#register" class="bg-on-primary-fixed text-primary px-10 py-4 font-headline font-black text-xl uppercase tracking-tighter whitespace-nowrap hover:bg-surface-container transition-all" data-k="mf.btn">ТУРНИР ОТКРЫТ</a>
+    </div>
+  </div>
 </section>
 
-<!-- ЦЕННОСТИ -->
-<section class="py-20 bg-gray-100">
-<div class="max-w-6xl mx-auto px-6">
-<h2 class="text-3xl font-bold text-center text-blue-900 mb-12"
-data-ru="Наши ценности"
-data-kz="Біздің құндылықтар">
-Наши ценности
-</h2>
 
-<div class="grid md:grid-cols-3 gap-8 text-center">
-
-<div class="bg-white p-6 rounded-xl shadow">
-<i class="fa-solid fa-flag text-3xl text-blue-700 mb-4"></i>
-<h3 class="font-semibold text-xl"
-data-ru="Патриотизм и традиции"
-data-kz="Патриотизм және дәстүр">
-Патриотизм
-</h3>
-<p data-ru="Борьба как часть культурного наследия."
-data-kz="Күрес – мәдени мұраның бір бөлігі.">
-Борьба как часть культурного наследия.
-</p>
-</div>
-
-<div class="bg-white p-6 rounded-xl shadow">
-<i class="fa-solid fa-scale-balanced text-3xl text-blue-700 mb-4"></i>
-<h3 class="font-semibold text-xl"
-data-ru="Честность и справедливость"
-data-kz="Адалдық және әділдік">
-Честность
-</h3>
-<p data-ru="Прозрачность и равные возможности."
-data-kz="Ашықтық және тең мүмкіндік.">
-Прозрачность.
-</p>
-</div>
-
-<div class="bg-white p-6 rounded-xl shadow">
-<i class="fa-solid fa-medal text-3xl text-blue-700 mb-4"></i>
-<h3 class="font-semibold text-xl"
-data-ru="Профессионализм"
-data-kz="Кәсібилік">
-Профессионализм
-</h3>
-<p data-ru="Высокие стандарты подготовки."
-data-kz="Жоғары дайындық стандарттары.">
-Стандарты.
-</p>
-</div>
-
-</div>
-</div>
+<!-- ═══════════ VENUE ═══════════ -->
+<section class="bg-surface-container-lowest py-24 relative overflow-hidden">
+  <div class="koshkar-muiz absolute inset-0 opacity-[0.04]"></div>
+  <div class="max-w-[1440px] mx-auto px-6 relative z-10 i18n-fade">
+    <div class="flex flex-col md:flex-row gap-20 items-stretch">
+      <div class="flex-1 reveal">
+        <span class="font-label font-bold text-primary tracking-[0.4em] uppercase block mb-4 text-sm" data-k="vn.lbl">МЕСТО ПРОВЕДЕНИЯ</span>
+        <h2 class="font-headline font-black text-7xl uppercase mb-12">
+          <span data-k="vn.h1">АБАЙ АРЕНА</span><br/><span class="text-surface-bright italic" data-k="vn.h2">СЕМЕЙ</span>
+        </h2>
+        <div class="grid grid-cols-2 gap-8 mb-12">
+          <div class="bg-surface-container p-6 border-l-2 border-primary">
+            <div class="text-4xl font-black font-label text-white">03</div>
+            <div class="text-xs uppercase tracking-widest opacity-50 mt-1" data-k="vn.mats">Ковра</div>
+          </div>
+          <div class="bg-surface-container p-6 border-l-2 border-primary">
+            <div class="text-4xl font-black font-label text-white">11</div>
+            <div class="text-xs uppercase tracking-widest opacity-50 mt-1" data-k="vn.nat">Наций</div>
+          </div>
+        </div>
+        <div class="space-y-6">
+          <div class="flex items-start gap-4">
+            <span class="material-symbols-outlined text-primary">flight_takeoff</span>
+            <div><h4 class="font-bold text-lg uppercase tracking-tight" data-k="vn.a1">Аэропорты</h4><p class="text-on-surface-variant text-sm" data-k="vn.a2">NQT / UKK</p></div>
+          </div>
+          <div class="flex items-start gap-4">
+            <span class="material-symbols-outlined text-primary">location_on</span>
+            <div><h4 class="font-bold text-lg uppercase tracking-tight" data-k="vn.l1">Адрес</h4><p class="text-on-surface-variant text-sm" data-k="vn.l2">МКСК «Абай Арена»</p></div>
+          </div>
+          <div class="flex items-start gap-4">
+            <span class="material-symbols-outlined text-primary">wifi</span>
+            <div><h4 class="font-bold text-lg uppercase tracking-tight" data-k="vn.s1">Трансляция</h4><p class="text-on-surface-variant text-sm" data-k="vn.s2">UWW+</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 bg-surface-container-high min-h-[400px] relative group reveal">
+        <img class="w-full h-full object-cover brightness-75" src="assets/arena.png" alt="Абай Арена"/>
+        <div class="absolute inset-0 border-8 border-transparent group-hover:border-primary/20 transition-all pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 bg-primary p-6">
+          <span class="font-headline font-black uppercase text-on-primary-fixed" data-k="vn.bdg">МКСК АБАЙ АРЕНА</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- КОНТАКТЫ -->
-<section class="py-20 bg-white text-center">
-<div class="max-w-4xl mx-auto px-6">
-<h2 class="text-3xl font-bold text-blue-900 mb-8"
-data-ru="Контакты"
-data-kz="Байланыс">
-Контакты
-</h2>
 
-<p data-ru="Казахстан, область Абай, г. Семей, ул. Первомайская, дом 32А, кв. 36"
-data-kz="Қазақстан, Абай облысы, Семей қ., Первомайская көшесі 32А, 36-пәтер">
-Адрес
-</p>
-
-<p class="mt-4">БИН: 221140005458</p>
-<p>АО «Bereke Bank»</p>
-
-<p class="mt-6 font-semibold text-blue-900"
-data-ru="Мы открыты к сотрудничеству и совместному созиданию"
-data-kz="Біз ынтымақтастық пен бірлескен дамуға ашықпыз">
-Мы открыты к сотрудничеству
-</p>
-</div>
+<!-- ═══════════ ВЕСА ═══════════ -->
+<section class="py-24 px-6 max-w-[1440px] mx-auto" id="weights">
+  <h2 class="font-headline font-black text-6xl uppercase mb-12 text-center reveal i18n-fade" data-k="wt.h">ВЕСОВЫЕ КАТЕГОРИИ</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-0 border border-outline-variant/20 reveal i18n-fade">
+    <div class="bg-surface-container-low p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.min">МИН</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">38</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.u">U15</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">41</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container-low p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.u">U15</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">44</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-primary p-10 border border-outline-variant/10 cursor-default"><div class="text-xs font-black text-on-primary mb-4 uppercase tracking-widest" data-k="wt.el">U15 ЭЛИТА</div><div class="text-5xl font-black font-label text-on-primary-fixed">48</div><div class="text-xl font-bold font-headline text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.u">U15</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">52</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container-low p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.u">U15</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">57</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.u">U15</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">62</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container-low p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.u">U15</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">68</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.u">U15</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">75</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container-low p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.u">U15</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">85</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+    <div class="bg-surface-container p-10 border border-outline-variant/10 group hover:bg-primary transition-all duration-300 cursor-default col-span-2 md:col-span-1 lg:col-span-2"><div class="text-xs font-black opacity-30 group-hover:opacity-100 group-hover:text-on-primary mb-4 uppercase tracking-widest" data-k="wt.max">МАКС</div><div class="text-5xl font-black font-label group-hover:text-on-primary-fixed">100</div><div class="text-xl font-bold font-headline group-hover:text-on-primary-fixed">KG</div></div>
+  </div>
 </section>
 
-<footer class="bg-blue-900 text-white text-center py-6">
-© 2026 Федерация борьбы области Абай
+
+<!-- ═══════════ РЕГЛАМЕНТ ═══════════ -->
+<section class="py-24 bg-surface" id="regs">
+  <div class="max-w-[1440px] mx-auto px-6">
+    <div class="flex flex-col md:flex-row gap-12">
+      <div class="w-full md:w-1/3 reveal i18n-fade">
+        <h2 class="font-headline font-black text-6xl uppercase sticky top-24" data-k="rg.h">РЕГЛАМЕНТ</h2>
+        <p class="mt-8 text-on-surface-variant max-w-xs" data-k="rg.p">UWW правила U15.</p>
+        <div class="mt-12 p-8 border border-primary/20 bg-primary/5">
+          <span class="material-symbols-outlined text-primary text-5xl mb-4 block" style="font-variation-settings:'FILL' 1;">policy</span>
+          <h4 class="font-bold uppercase mb-2" data-k="rg.at">Антидопинг</h4>
+          <p class="text-sm opacity-60" data-k="rg.ap">ВАДА и UWW.</p>
+        </div>
+        <div class="mt-6 p-8 border border-tertiary/20 bg-tertiary/5">
+          <span class="material-symbols-outlined text-tertiary text-5xl mb-4 block" style="font-variation-settings:'FILL' 1;">videocam</span>
+          <h4 class="font-bold uppercase mb-2" data-k="rg.ct">Challenge</h4>
+          <p class="text-sm opacity-60" data-k="rg.cp">Видео-повтор.</p>
+        </div>
+      </div>
+      <div class="w-full md:w-2/3 space-y-1 reveal i18n-fade">
+        <div class="bg-surface-container-high p-8 flex flex-col md:flex-row justify-between items-center">
+          <div class="flex items-center gap-6">
+            <span class="text-6xl font-black font-label text-primary/20">03</span>
+            <div><h3 class="text-2xl font-black uppercase font-headline" data-k="rg.d1h">МАЙ / ДЕНЬ 1</h3><p class="text-sm opacity-50" data-k="rg.d1s">Квалификация</p></div>
+          </div>
+          <div class="mt-4 md:mt-0 text-right font-label text-sm text-on-surface-variant">
+            <div class="py-1" data-k="rg.d1t1">08:00</div><div class="py-1" data-k="rg.d1t2">09:00</div><div class="py-1" data-k="rg.d1t3">11:00</div>
+          </div>
+        </div>
+        <div class="bg-surface-container-highest p-8 flex flex-col md:flex-row justify-between items-center">
+          <div class="flex items-center gap-6">
+            <span class="text-6xl font-black font-label text-primary/20">04</span>
+            <div><h3 class="text-2xl font-black uppercase font-headline" data-k="rg.d2h">МАЙ / ДЕНЬ 2</h3><p class="text-sm opacity-50" data-k="rg.d2s">Финалы</p></div>
+          </div>
+          <div class="mt-4 md:mt-0 text-right font-label text-sm text-on-surface-variant">
+            <div class="py-1" data-k="rg.d2t1">08:00</div><div class="py-1" data-k="rg.d2t2">10:00</div><div class="py-1" data-k="rg.d2t3">16:00</div><div class="py-1" data-k="rg.d2t4">17:00</div>
+          </div>
+        </div>
+        <div class="bg-surface-container p-8 flex flex-col md:flex-row justify-between items-center">
+          <div class="flex items-center gap-6">
+            <span class="text-6xl font-black font-label text-primary/20">05</span>
+            <div><h3 class="text-2xl font-black uppercase font-headline" data-k="rg.d3h">МАЙ / ДЕНЬ 3</h3><p class="text-sm opacity-50" data-k="rg.d3s">Закрытие</p></div>
+          </div>
+          <div class="mt-4 md:mt-0 text-right font-label text-sm text-on-surface-variant">
+            <div class="py-1" data-k="rg.d3t1">Трансфер</div><div class="py-1" data-k="rg.d3t2">LOC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ НАГРАДЫ ═══════════ -->
+<section class="py-24 bg-surface-container-lowest overflow-hidden" id="awards">
+  <div class="max-w-[1440px] mx-auto px-6">
+    <div class="flex flex-col lg:flex-row items-center gap-24">
+      <div class="relative w-full lg:w-1/2 flex justify-center items-end gap-6 reveal">
+        <div class="absolute inset-0 bg-primary/10 blur-[120px]"></div>
+        <!-- statuette left, grounded -->
+        <div class="relative z-10 w-[38%] self-end mb-4 transform hover:scale-105 transition-transform duration-700">
+          <img class="w-full drop-shadow-2xl" src="assets/zhaksalyk_statuette.png" alt="Кубок Legacy — статуэтка Ушкемпирова"/>
+        </div>
+        <!-- medal right, floating -->
+        <div class="relative z-10 w-[52%] transform hover:scale-105 transition-transform duration-700">
+          <img class="w-full drop-shadow-2xl" src="assets/medal-avers.png" alt="Медаль турнира U15"/>
+        </div>
+      </div>
+      <div class="w-full lg:w-1/2 reveal i18n-fade">
+        <span class="text-primary font-black tracking-[0.4em] uppercase block mb-4 text-sm" data-k="aw.lbl">ПРИЗОВОЙ ФОНД</span>
+        <h2 class="font-headline font-black text-7xl uppercase mb-8 leading-[0.9]">
+          <span data-k="aw.h1">ЗОЛОТЫЕ</span><br/><span data-k="aw.h2">МЕДАЛИ</span><br/><span class="text-primary-container" data-k="aw.h3">ЧЕСТИ</span>
+        </h2>
+        <p class="text-xl text-on-surface-variant leading-relaxed mb-8" data-k="aw.p">Победители получат медали.</p>
+        <p class="text-on-surface-variant text-sm mb-12" data-k="aw.sub">Денежные призы — по решению Оргкомитета.</p>
+        <div class="flex gap-4">
+          <div class="bg-surface-container p-6 w-1/3 text-center border-b-4 border-primary"><div class="font-black text-2xl" data-k="aw.g">ЗОЛОТО</div></div>
+          <div class="bg-surface-container p-6 w-1/3 text-center border-b-4 border-on-surface-variant/30"><div class="font-black text-2xl" data-k="aw.s">СЕРЕБРО</div></div>
+          <div class="bg-surface-container p-6 w-1/3 text-center border-b-4 border-[#8e1500]"><div class="font-black text-2xl" data-k="aw.b">БРОНЗА</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ СТРАНЫ ═══════════ -->
+<section class="py-24 bg-surface-dim border-y border-outline-variant/10">
+  <div class="max-w-[1440px] mx-auto px-6">
+    <h3 class="font-headline font-black text-center text-4xl uppercase mb-16 opacity-25 i18n-fade" data-k="nt.h">СТРАНЫ-УЧАСТНИЦЫ</h3>
+    <div class="flex flex-wrap justify-center gap-x-16 gap-y-10 opacity-60 hover:opacity-100 transition-opacity duration-500">
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/am.png" alt="Armenia"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">ARM</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Armenia</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/az.png" alt="Azerbaijan"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">AZE</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Azerbaijan</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/by.png" alt="Belarus"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">BLR</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Belarus</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/cn.png" alt="China"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">CHN</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">China</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/ge.png" alt="Georgia"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">GEO</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Georgia</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/ir.png" alt="Iran"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">IRI</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Iran</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-90 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/kz.png" alt="Kazakhstan"/>
+        <div class="text-2xl font-black font-label text-primary">KAZ</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Kazakhstan</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/kg.png" alt="Kyrgyzstan"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">KGZ</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Kyrgyzstan</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/ru.png" alt="Russia"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">RUS</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Russia</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/tj.png" alt="Tajikistan"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">TJK</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Tajikistan</div>
+      </div>
+      <div class="text-center group cursor-default">
+        <img class="flag-img opacity-70 group-hover:opacity-100 transition-opacity" src="https://flagcdn.com/w40/uz.png" alt="Uzbekistan"/>
+        <div class="text-2xl font-black font-label group-hover:text-primary transition-colors">UZB</div>
+        <div class="text-[10px] uppercase tracking-widest mt-1 opacity-60">Uzbekistan</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ РЕГИСТРАЦИЯ ═══════════ -->
+<section class="py-24 bg-surface relative" id="register">
+  <div class="max-w-[1440px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-24">
+    <div class="reveal i18n-fade">
+      <h2 class="font-headline font-black text-7xl uppercase mb-8 leading-none" data-k="fr.h">ВОЙТИ В АРЕНУ</h2>
+      <p class="text-on-surface-variant mb-12 max-w-sm" data-k="fr.p">Регистрация открыта.</p>
+      <div class="mb-10">
+        <div class="text-xs font-black tracking-widest uppercase text-primary mb-4" data-k="fr.cd">ОБРАТНЫЙ ОТСЧЁТ</div>
+        <div class="flex gap-3">
+          <div class="bg-surface-container-low p-5 flex flex-col items-center"><span class="text-4xl font-black font-label" id="cd-days">—</span><span class="text-[10px] uppercase mt-1 opacity-60" id="lbl-days" data-k="fr.days">Дней</span></div>
+          <div class="bg-surface-container-low p-5 flex flex-col items-center"><span class="text-4xl font-black font-label" id="cd-hours">—</span><span class="text-[10px] uppercase mt-1 opacity-60" id="lbl-hours" data-k="fr.hours">Часов</span></div>
+          <div class="bg-surface-container-low p-5 flex flex-col items-center"><span class="text-4xl font-black font-label" id="cd-mins">—</span><span class="text-[10px] uppercase mt-1 opacity-60" id="lbl-mins" data-k="fr.mins">Минут</span></div>
+          <div class="bg-surface-container-low p-5 flex flex-col items-center"><span class="text-4xl font-black font-label" id="cd-secs">—</span><span class="text-[10px] uppercase mt-1 opacity-60" id="lbl-secs" data-k="fr.secs">Секунд</span></div>
+        </div>
+      </div>
+      <div class="flex items-center gap-8 opacity-60 hover:opacity-100 transition-all duration-500">
+        <img class="h-20 w-auto object-contain" src="assets/tournament emblem.png" alt="Эмблема турнира"/>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-low p-12 relative overflow-hidden reveal">
+      <div class="koshkar-muiz absolute inset-0 opacity-[0.04]"></div>
+      <div class="relative z-10 space-y-8 i18n-fade">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="field-row pb-2"><label class="block text-[10px] font-black uppercase tracking-widest opacity-50 mb-2" data-k="fr.fn">Имя</label><input class="w-full bg-transparent border-none p-0 focus:ring-0 font-headline text-lg outline-none text-white caret-primary placeholder-on-surface-variant/30" placeholder="" type="text"/></div>
+          <div class="field-row pb-2"><label class="block text-[10px] font-black uppercase tracking-widest opacity-50 mb-2" data-k="fr.fc">Код страны</label><input class="w-full bg-transparent border-none p-0 focus:ring-0 font-headline text-lg uppercase outline-none text-white caret-primary placeholder-on-surface-variant/30" placeholder="" type="text" maxlength="3"/></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="field-row pb-2">
+            <label class="block text-[10px] font-black uppercase tracking-widest opacity-50 mb-2" data-k="fr.fw">Вес</label>
+            <select id="wsel" class="w-full bg-transparent border-none p-0 focus:ring-0 font-headline text-lg uppercase appearance-none cursor-pointer outline-none text-white">
+              <option class="bg-surface-container text-white" value="">Выберите вес</option>
+              <option class="bg-surface-container text-white" value="38">38 KG</option><option class="bg-surface-container text-white" value="41">41 KG</option>
+              <option class="bg-surface-container text-white" value="44">44 KG</option><option class="bg-surface-container text-white" value="48">48 KG</option>
+              <option class="bg-surface-container text-white" value="52">52 KG</option><option class="bg-surface-container text-white" value="57">57 KG</option>
+              <option class="bg-surface-container text-white" value="62">62 KG</option><option class="bg-surface-container text-white" value="68">68 KG</option>
+              <option class="bg-surface-container text-white" value="75">75 KG</option><option class="bg-surface-container text-white" value="85">85 KG</option>
+              <option class="bg-surface-container text-white" value="100">100 KG</option>
+            </select>
+          </div>
+          <div class="field-row pb-2"><label class="block text-[10px] font-black uppercase tracking-widest opacity-50 mb-2" data-k="fr.fl">UWW License</label><input class="w-full bg-transparent border-none p-0 focus:ring-0 font-headline text-lg outline-none text-white caret-primary placeholder-on-surface-variant/30" placeholder="" type="text"/></div>
+        </div>
+        <div class="field-row pb-2"><label class="block text-[10px] font-black uppercase tracking-widest opacity-50 mb-2" data-k="fr.fe">Email</label><input class="w-full bg-transparent border-none p-0 focus:ring-0 font-headline text-lg outline-none text-white caret-primary placeholder-on-surface-variant/30" placeholder="" type="email"/></div>
+        <div class="field-row pb-2"><label class="block text-[10px] font-black uppercase tracking-widest opacity-50 mb-2" data-k="fr.fb">Федерация</label><input class="w-full bg-transparent border-none p-0 focus:ring-0 font-headline text-lg outline-none text-white caret-primary placeholder-on-surface-variant/30" placeholder="" type="text"/></div>
+        <button onclick="alert(t('fr.ok'))" class="w-full bg-primary py-6 text-on-primary-fixed font-headline font-black text-xl uppercase tracking-tighter hover:bg-white transition-all active:scale-[.98] cursor-pointer" data-k="fr.btn">ПОДАТЬ ОФИЦИАЛЬНУЮ ЗАЯВКУ</button>
+        <p class="text-[10px] uppercase opacity-40 text-center tracking-widest" data-k="fr.leg">Подтверждение UWW.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="bg-surface-container-lowest w-full border-t border-outline-variant/15 flex flex-col md:flex-row justify-between items-start p-12 gap-8 i18n-fade">
+  <div class="max-w-md">
+    <div class="text-3xl font-black text-primary mb-4 font-headline uppercase italic">EDITORIAL ATHLETE</div>
+    <!-- Organizer block -->
+    <div class="mb-6 space-y-3 border-l-2 border-primary/30 pl-4">
+      <p class="text-on-surface-variant/70 text-xs font-headline uppercase tracking-widest leading-relaxed">
+        <span class="text-primary/60">Организатор</span><br/>
+        Управление физической культуры и спорта области Абай<br/>
+        <a href="mailto:ufks.abai@mail.ru" class="text-primary/80 hover:text-primary transition-colors">ufks.abai@mail.ru</a>
+      </p>
+      <p class="text-on-surface-variant/50 text-xs font-headline uppercase tracking-widest leading-relaxed">
+        <span class="text-on-surface-variant/40">Под эгидой:</span><br/>
+        Министерство туризма и спорта Республики Казахстан (МТС РК),<br/>
+        Федерация греко-римской, вольной и женской борьбы РК,<br/>
+        Акимат Абайской области
+      </p>
+    </div>
+    <p class="text-on-surface-variant/30 text-xs font-headline uppercase tracking-widest leading-relaxed" data-k="ft.copy">© 2026</p>
+  </div>
+  <div class="flex flex-col md:flex-row gap-16">
+    <div class="flex flex-col gap-4">
+      <span class="text-primary font-headline uppercase text-xs tracking-widest font-bold" data-k="ft.nav">НАВИГАЦИЯ</span>
+      <a class="text-on-surface-variant/40 font-headline uppercase text-xs tracking-widest hover:text-white transition-colors" href="#tournament" data-k="ft.l1">Турнир</a>
+      <a class="text-on-surface-variant/40 font-headline uppercase text-xs tracking-widest hover:text-white transition-colors" href="#regs"       data-k="ft.l2">Регламент</a>
+      <a class="text-on-surface-variant/40 font-headline uppercase text-xs tracking-widest hover:text-white transition-colors" href="#manifesto"  data-k="ft.l3">Манифест</a>
+      <a class="text-on-surface-variant/40 font-headline uppercase text-xs tracking-widest hover:text-white transition-colors" href="#register"   data-k="ft.l4">Регистрация</a>
+    </div>
+    <div class="flex flex-col gap-4">
+      <span class="text-primary font-headline uppercase text-xs tracking-widest font-bold" data-k="ft.con">КОНТАКТЫ</span>
+      <a class="text-on-surface-variant/40 font-headline uppercase text-xs tracking-widest hover:text-white transition-colors" href="#">ABAY WRESTLING FEDERATION</a>
+      <a class="text-on-surface-variant/40 font-headline uppercase text-xs tracking-widest hover:text-white transition-colors" href="#">UWW.ORG</a>
+    </div>
+  </div>
 </footer>
+
+
+<script>
+/* ── Countdown ── */
+function tick() {
+  const d = new Date('2026-05-03T04:00:00Z') - new Date();
+  if (d<=0) { ['days','hours','mins','secs'].forEach(k=>{ document.getElementById('cd-'+k).textContent='00'; }); return; }
+  document.getElementById('cd-days').textContent  = String(Math.floor(d/86400000)).padStart(2,'0');
+  document.getElementById('cd-hours').textContent = String(Math.floor(d%86400000/3600000)).padStart(2,'0');
+  document.getElementById('cd-mins').textContent  = String(Math.floor(d%3600000/60000)).padStart(2,'0');
+  document.getElementById('cd-secs').textContent  = String(Math.floor(d%60000/1000)).padStart(2,'0');
+}
+tick(); setInterval(tick,1000);
+
+/* ── Scroll reveal ── */
+const obs = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); }),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── Active nav ── */
+const secs2 = document.querySelectorAll('section[id]');
+const links  = document.querySelectorAll('nav a.nav-link');
+window.addEventListener('scroll',()=>{
+  let cur=''; secs2.forEach(s=>{ if(window.scrollY>=s.offsetTop-120) cur=s.id; });
+  links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', ()=>{ applyLang(false); });
+</script>
 
 </body>
 </html>
